@@ -1,0 +1,32 @@
+# Get LS to work in colour
+alias ls="ls -GF"
+
+# Shorthand for common Git commands
+alias ga="git add --all"
+alias gcm="git commit -m"
+alias gca="git commit --amend"
+alias gpf="git push -f"
+alias gp="git push"
+alias grc="git rebase --continue"
+alias gc="git checkout"
+alias gs="git status"
+
+# Delete all branches that aren't different from master
+git-delete-squashed() {
+    git checkout -q master && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base master $branch) && [[ $(git cherry master $(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done
+}
+
+alias gds=git-delete-squashed()
+
+# Git branch in prompt.
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+setopt PROMPT_SUBST
+export PROMPT='%1~%F{green}$(parse_git_branch)%f %# '
+
+# Load Git completion
+zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
+fpath=(~/.zsh $fpath)
+
+autoload -Uz compinit && compinit
