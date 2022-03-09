@@ -1,0 +1,3 @@
+[submodule "android/jet-materials"]
+	path = android/jet-materials
+	url = https://github.com/raywenderlich/jet-materials.git
