@@ -1,3 +1,6 @@
 [submodule "android/jet-materials"]
 	path = android/jet-materials
 	url = https://github.com/raywenderlich/jet-materials.git
+[submodule "python/algofi-py-sdk"]
+	path = python/algofi-py-sdk
+	url = https://github.com/Algofiorg/algofi-py-sdk.git
