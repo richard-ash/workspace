@@ -4,3 +4,9 @@
 [submodule "python/algofi-py-sdk"]
 	path = python/algofi-py-sdk
 	url = https://github.com/Algofiorg/algofi-py-sdk.git
+[submodule "python/algofi-amm-py-sdk"]
+	path = python/algofi-amm-py-sdk
+	url = https://github.com/Algofiorg/algofi-amm-py-sdk.git
+[submodule "python/tinyman-py-sdk"]
+	path = python/tinyman-py-sdk
+	url = https://github.com/tinymanorg/tinyman-py-sdk
