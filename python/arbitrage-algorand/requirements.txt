@@ -1,9 +1,15 @@
 algofi-amm-py-sdk @ git+https://github.com/Algofiorg/algofi-amm-py-sdk@08c8fed833805749c4a641d06f10ac080291ceb5
+certifi==2021.10.8
 cffi==1.15.0
+charset-normalizer==2.0.12
+idna==3.3
 msgpack==1.0.3
+pactsdk==0.2.0
 py-algorand-sdk==1.11.0
 pycparser==2.21
 pycryptodomex==3.14.1
 PyNaCl==1.5.0
 python-dotenv==0.20.0
+requests==2.27.1
 tinyman-py-sdk @ git+https://github.com/tinymanorg/tinyman-py-sdk.git@c922cba801e3bdab0f3a5a5e19a25c292f16a9fd
+urllib3==1.26.9

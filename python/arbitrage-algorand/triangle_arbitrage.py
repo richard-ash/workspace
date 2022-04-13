@@ -13,9 +13,11 @@ from enum import Enum, unique
 from algofi_amm.v0.asset import Asset
 from algofi_amm.v0.pool import Pool
 from algofi_amm.v0.client import AlgofiAMMMainnetClient
-from algofi_amm.v0.config import PoolType, PoolStatus
+from algofi_amm.v0.config import PoolType
 from algofi_amm.utils import TransactionGroup
 from tinyman.v1.client import TinymanMainnetClient
+from algosdk.v2client.algod import AlgodClient
+import pactsdk
 
 my_path = os.path.abspath(os.path.dirname(__file__))
 ENV_PATH = os.path.join(my_path, ".env")
@@ -23,11 +25,10 @@ user = dotenv_values(ENV_PATH)
 my_address = mnemonic.to_public_key(user['mnemonic'])
 my_key =  mnemonic.to_private_key(user['mnemonic'])
 
-FEE = 0.0025
 asset_ids = {
     'GOBTC': 386192725,
     'GOETH': 386195940,
-    'ALGO': 1,
+    'ALGO': 0,
     'STBL': 465865291,
     'USDC': 31566704,
     'GOMINT': 441139422,
@@ -55,7 +56,8 @@ tinyman_supported_pools = [
     ('GOETH', 'ALGO'),
     ('OPUL', 'USDC'),
     ('STBL', 'ALGO'),
-    ('USDT', 'ALGO')
+    ('USDT', 'ALGO'),
+    ('OPUL', 'USDC')
 ]
 
 algofi_supported_pools = [
@@ -64,17 +66,33 @@ algofi_supported_pools = [
     ('ALGO', 'GOMINT', PoolType.CONSTANT_PRODUCT_25BP_FEE),
     ('ALGO', 'DEFLY', PoolType.CONSTANT_PRODUCT_75BP_FEE),
     ('USDC', 'STBL', PoolType.CONSTANT_PRODUCT_25BP_FEE),
+    # ('USDC', 'STBL', PoolType.NANOSWAP),
     ('GOBTC', 'STBL', PoolType.CONSTANT_PRODUCT_25BP_FEE),
     ('GOETH', 'STBL', PoolType.CONSTANT_PRODUCT_25BP_FEE),
     ('OPUL', 'STBL', PoolType.CONSTANT_PRODUCT_75BP_FEE),
     ('ALGO', 'OPUL', PoolType.CONSTANT_PRODUCT_75BP_FEE),
-    ('ALGO', 'GOETH', PoolType.CONSTANT_PRODUCT_25BP_FEE)
+    ('ALGO', 'GOETH', PoolType.CONSTANT_PRODUCT_25BP_FEE),
+    ('STBL', 'DEFLY', PoolType.CONSTANT_PRODUCT_75BP_FEE),
+    ('ALGO', 'GOBTC', PoolType.CONSTANT_PRODUCT_25BP_FEE),
+    ('ALGO', 'GOETH', PoolType.CONSTANT_PRODUCT_25BP_FEE),
+]
+
+pact_supported_pools = [
+    ('USDT', 'USDC'),
+    ('ALGO', 'GOBTC'),
+    ('ALGO', 'USDC'),
+    ('ALGO', 'GOETH'),
+    ('ALGO', 'GOMINT'),
+    ('ALGO', 'DEFLY'),
+    ('ALGO', 'OPUL'),
+    ('USDC', 'OPUL')
 ]
 
 @unique
 class Exchange(Enum):
     ALGOFI = 1
     TINYMAN = 2
+    PACT = 3
 
 class ExchangeRate:
     def __init__(self, price: float, exchange: Exchange, fee: float):
@@ -83,35 +101,35 @@ class ExchangeRate:
         self.exchange = exchange
 
     def __repr__(self): 
-        return "{ " + str(self.price) + ", " + str(self.exchange) + " }"
+        return "{ " + str(self.price) + ", " + str(self.exchange) +  ", " + str(self.fee) + " }"
 
 def main():
     """main function
     """
     
     print(f"My key is {my_key} and my address is {my_address}")
-    print(f"Supported assets are {asset_ids}")
     
     start_time = time()
     algofi_prices = get_prices_algofi()
     tinyman_prices = get_prices_tinyman()
+    pact_prices = get_prices_pact()
     end_time = time()
     print(f"Downloaded prices in {end_time - start_time}")
     
     start_time = time()
-    exchange_rates = create_exchange_rates([algofi_prices, tinyman_prices])
+    exchange_rates = create_exchange_rates([algofi_prices, tinyman_prices, pact_prices])
     end_time = time()
     print(f"Created exchange rates in {end_time - start_time}")
     print(f'Exchange Rates = {exchange_rates}')
 
     start_time = time()
-    triangles = list(find_triangles(tinyman_prices))
+    triangles = list(find_triangles(exchange_rates))
     end_time = time()
 
     print(f"Computed triangles in {end_time - start_time}")
     if triangles:
         for triangle in sorted(triangles, key=itemgetter('profit'), reverse=True):
-            describe_triangle(tinyman_prices, triangle)
+            describe_triangle(exchange_rates, triangle)
             # arbitrage(triangle=triangle)
     else:
         print("No triangles found, try again!")
@@ -181,8 +199,7 @@ def recurse_triangle(prices: dict[str: dict[str: ExchangeRate]], current_coin: s
         if current_coin in prices:
             pairs = prices[current_coin]
             for coin, exchange_rate in pairs.items():
-                price = exchange_rate.price
-                new_price = (amount * price) * (1.0 - exchange_rate.fee)
+                new_price = (amount * exchange_rate.price) * (1.0 - exchange_rate.fee)
                 for triangle in recurse_triangle(prices, coin, starting_coin, depth_left - 1, new_price):
                     triangle['coins'] = triangle['coins'] + [current_coin]
                     yield triangle
@@ -192,7 +209,7 @@ def recurse_triangle(prices: dict[str: dict[str: ExchangeRate]], current_coin: s
             'profit': amount,
         }
 
-def describe_triangle(prices, triangle):
+def describe_triangle(prices: dict[str: dict[str: ExchangeRate]], triangle):
     """price method
     """
     coins = triangle['coins']
@@ -201,7 +218,7 @@ def describe_triangle(prices, triangle):
     for i in range(len(coins) - 1):
         first = coins[i]
         second = coins[i + 1]
-        print(f"     {second:4} / {first:4}: {prices[first][second]:-17.8f}")
+        print(f"     {second:4} / {first:4}: {prices[first][second].price:-17.8f} {prices[first][second].exchange}")
     print('')
 
 def get_prices_algofi():
@@ -212,6 +229,12 @@ def get_prices_algofi():
     for asset1_key, asset2_key, pool_type in algofi_supported_pools:
         asset1_id = asset_ids[asset1_key]
         asset2_id = asset_ids[asset2_key]
+
+        if asset1_id == 0:
+            asset1_id = 1
+        if asset2_id == 0:
+            asset2_id = 1
+
         try:
             pool = client.get_pool(pool_type=pool_type, asset1_id=asset1_id, asset2_id=asset2_id)
             pool.refresh_state()
@@ -247,9 +270,6 @@ def get_prices_tinyman():
         asset1_id = asset_ids[asset1_key]
         asset2_id = asset_ids[asset2_key]
 
-        if asset2_id == 1:
-            asset2_id = 0
-
         try:
             pool = client.fetch_pool(asset1=asset1_id, asset2=asset2_id)
             if asset1_key not in prices:
@@ -264,6 +284,37 @@ def get_prices_tinyman():
             continue
 
     return prices
+
+def get_prices_pact():
+    """price method
+    """
+    algod = AlgodClient('', 'https://api.algoexplorer.io', headers={'User-Agent': 'algosdk'})
+    client = pactsdk.PactClient(algod)
+
+    prices = {}
+    for asset1_key, asset2_key in tinyman_supported_pools:
+        asset1_id = asset_ids[asset1_key]
+        asset2_id = asset_ids[asset2_key]
+
+        try:
+            pool = client.fetch_pools_by_assets(primary_asset=asset1_id, secondary_asset=asset2_id)[0]
+            if asset1_key not in prices:
+                prices[asset1_key] = {}
+            primary_asset_price = float(pool.calculator.secondary_asset_price)
+            prices[asset1_key][asset2_key] = ExchangeRate(primary_asset_price, Exchange.PACT, pool.fee_bps / 10000)
+
+            if asset2_key not in prices:
+                prices[asset2_key] = {}
+            secondary_asset_price = float(pool.calculator.primary_asset_price)
+            prices[asset2_key][asset1_key] = ExchangeRate(secondary_asset_price, Exchange.PACT, pool.fee_bps / 10000)
+                
+        except Exception as error:
+            print(f"Failed to add pool. error={error}, asset1={asset1_key}, asset2={asset2_key}")
+            continue
+
+    return prices
+
+
 
 if __name__ == '__main__':    
     main()
