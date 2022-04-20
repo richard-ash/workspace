@@ -10,3 +10,6 @@
 [submodule "python/tinyman-py-sdk"]
 	path = python/tinyman-py-sdk
 	url = https://github.com/tinymanorg/tinyman-py-sdk
+[submodule "ios/rwi-materials"]
+	path = ios/rwi-materials
+	url = https://github.com/richard-ash/rwi-materials
