@@ -1,0 +1,18 @@
+ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon
+CODE_SIGN_IDENTITY=iPhone Developer
+ENABLE_PREVIEWS=YES
+INFOPLIST_FILE=MovieInfo/Info.plist
+PRODUCT_BUNDLE_IDENTIFIER=com.raywenderlich.movieinfo
+PRODUCT_NAME=MovieInfo
+SDKROOT=iphoneos
+SUPPORTED_PLATFORMS=iphonesimulator iphoneos
+SWIFT_VERSION=5.4
+TARGETED_DEVICE_FAMILY=1,2
+
+LD_RUNPATH_SEARCH_PATHS[config=Debug]=["$(inherited)", "@executable_path/Frameworks"]
+LD_RUNPATH_SEARCH_PATHS[config=Release]=["$(inherited)", "@executable_path/Frameworks"]
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]=DEBUG
+SWIFT_COMPILATION_MODE[config=Debug]=singlefile
+SWIFT_COMPILATION_MODE[config=Release]=wholemodule
+SWIFT_OPTIMIZATION_LEVEL[config=Debug]=-Onone
+SWIFT_OPTIMIZATION_LEVEL[config=Release]=-Owholemodule

@@ -1,0 +1,25 @@
+CODE_SIGN_IDENTITY=
+CURRENT_PROJECT_VERSION=1
+DEFINES_MODULE=YES
+DYLIB_COMPATIBILITY_VERSION=1
+DYLIB_CURRENT_VERSION=1
+DYLIB_INSTALL_NAME_BASE=@rpath
+INFOPLIST_FILE=NetworkKit/Info.plist
+INSTALL_PATH=$(LOCAL_LIBRARY_DIR)/Frameworks
+PRODUCT_BUNDLE_IDENTIFIER=com.raywenderlich.networkkit
+PRODUCT_NAME=NetworkKit
+SDKROOT=iphoneos
+SKIP_INSTALL=YES
+SUPPORTED_PLATFORMS=iphonesimulator iphoneos
+SWIFT_VERSION=5.4
+TARGETED_DEVICE_FAMILY=1,2
+VERSIONING_SYSTEM=apple-generic
+VERSION_INFO_PREFIX=
+
+LD_RUNPATH_SEARCH_PATHS[config=Debug]=["$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"]
+LD_RUNPATH_SEARCH_PATHS[config=Release]=["$(inherited)", "@executable_path/Frameworks", "@loader_path/Frameworks"]
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug]=DEBUG
+SWIFT_COMPILATION_MODE[config=Debug]=singlefile
+SWIFT_COMPILATION_MODE[config=Release]=wholemodule
+SWIFT_OPTIMIZATION_LEVEL[config=Debug]=-Onone
+SWIFT_OPTIMIZATION_LEVEL[config=Release]=-Owholemodule
