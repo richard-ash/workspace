@@ -13,3 +13,6 @@
 [submodule "ios/rwi-materials"]
 	path = ios/rwi-materials
 	url = https://github.com/richard-ash/rwi-materials
+[submodule "android/kco-materials"]
+	path = android/kco-materials
+	url = https://github.com/raywenderlich/kco-materials.git
