@@ -19,3 +19,6 @@
 [submodule "graphql/lift-off/odyssey-lift-off-part3"]
 	path = graphql/lift-off/odyssey-lift-off-part3
 	url = https://github.com/apollographql/odyssey-lift-off-part3
+[submodule "graphql/lift-off/odyssey-lift-off-part5-server"]
+	path = graphql/lift-off/odyssey-lift-off-part5-server
+	url = https://github.com/richard-ash/odyssey-lift-off-part5-server.git
