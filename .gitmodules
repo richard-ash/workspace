@@ -22,3 +22,6 @@
 [submodule "graphql/lift-off/odyssey-lift-off-part5-server"]
 	path = graphql/lift-off/odyssey-lift-off-part5-server
 	url = https://github.com/richard-ash/odyssey-lift-off-part5-server.git
+[submodule "graphql/lift-off/odyssey-lift-off-part5-client"]
+	path = graphql/lift-off/odyssey-lift-off-part5-client
+	url = https://github.com/richard-ash/odyssey-lift-off-part5-client.git
