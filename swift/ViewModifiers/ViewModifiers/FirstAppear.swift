@@ -1,3 +1,5 @@
+// Credit https://www.swiftjectivec.com/swiftui-run-code-only-once-versus-onappear-or-task/
+
 import SwiftUI
 
 public extension View {
