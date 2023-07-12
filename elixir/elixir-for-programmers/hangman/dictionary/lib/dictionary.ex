@@ -1,11 +1,8 @@
 defmodule Dictionary do
-  alias Dictionary.Impl.WordList
+  alias Dictionary.Runtime.Server
 
-  @opaque t :: WordList.t
+  @opaque t :: Server.t
 
-  @spec start :: t
-  defdelegate start(), to: WordList, as: :word_list
-
-  @spec random_word(t) :: String.t
-  defdelegate random_word(words), to: WordList
+  @spec random_word() :: String.t
+  defdelegate random_word(), to: Server
 end
