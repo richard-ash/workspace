@@ -1,5 +1,4 @@
 defmodule Hangman.Runtime.Watchdog do
-
   def start(expiry_time) do
     spawn_link(fn -> watcher(expiry_time) end)
   end
@@ -12,10 +11,9 @@ defmodule Hangman.Runtime.Watchdog do
     receive do
       :im_alive ->
         watcher(expiry_time)
-
-      after expiry_time ->
-        Process.exit(self(), { :shutdown, :watchdog_triggered })
-      end
+    after
+      expiry_time ->
+        Process.exit(self(), {:shutdown, :watchdog_triggered})
     end
   end
 end
