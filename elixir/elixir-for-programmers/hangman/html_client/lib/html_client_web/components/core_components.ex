@@ -235,10 +235,11 @@ defmodule HtmlClientWeb.CoreComponents do
     """
   end
 
+  @spec input(map) :: Phoenix.LiveView.Rendered.t()
   @doc """
   Renders an input with label and error messages.
 
-  A `Phoenix.HTML.FormField` may be passed as argument,
+  A `Phoenix.HTML.FwormField` may be passed as argument,
   which is used to retrieve the input name, id, and values.
   Otherwise all attributes may be passed explicitly.
 

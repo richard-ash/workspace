@@ -4,6 +4,19 @@
 
 /* This file is for your main application CSS */
 
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .tally th {
   font-weight: normal;
   color: #aaa;

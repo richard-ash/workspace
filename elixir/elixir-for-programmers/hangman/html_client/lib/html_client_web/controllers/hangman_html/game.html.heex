@@ -6,23 +6,8 @@
   </div>
 
   <div class="column">
-    <table class="tally">
-      <tr>
-        <th>Turns left:</th>
-        <td><%= @tally.turns_left %></td>
-      </tr>
-      <tr>
-        <th>Letters used:</th>
-        <td><%= @tally.used |> Enum.join(", ") %></td>
-      </tr>
-      <tr>
-        <th>Word so far:</th>
-        <td><%= @tally.letters |> Enum.join(" ") %></td>
-      </tr>
-    </table>
-
+    <.tally_info tally={@tally} />
     <%= move_status(@tally.game_state) |> raw() %>
-
     <%= continue_or_try_again(@conn, @tally.game_state) %>
   </div>
 </div>

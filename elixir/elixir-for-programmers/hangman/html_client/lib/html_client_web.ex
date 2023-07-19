@@ -81,11 +81,11 @@ defmodule HtmlClientWeb do
   defp html_helpers do
     quote do
       # HTML escaping functionality
-      import Phoenix.HTML
+      use Phoenix.HTML
       # Core UI components and translation
       import HtmlClientWeb.CoreComponents
-      import Phoenix.HTML.Link
-      import Phoenix.HTML.Form
+      # Custom components
+      import HtmlClientWeb.CustomComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
